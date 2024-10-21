@@ -25,6 +25,26 @@ const AuthPage = () => {
   function handleTabChange(value) {
     setActiveTab(value);
   }
+
+  function checkIfSignInFormIsValid() {
+    return (
+      signInFormData &&
+      signInFormData.userEmail !== "" &&
+      signInFormData.password !== ""
+    );
+  }
+
+  function checkIfSignUnFormIsValid() {
+    return (
+      signUpFormData &&
+      signUpFormData.userName &&
+      signUpFormData.userEmail !== "" &&
+      signUpFormData.password !== ""
+    );
+  }
+
+  console.log(signUpFormData);
+
   return (
     <div className="flex flex-col min-h-screen">
       <header className="px-4 lg:px-6 h-14 flex items-center border-b">
@@ -58,6 +78,7 @@ const AuthPage = () => {
                   buttonText={"Sign In"}
                   formData={signInFormData}
                   setFormData={setSignInFormData}
+                  isButtonDisabled={!checkIfSignInFormIsValid()}
                 />
               </CardContent>
             </Card>
@@ -76,6 +97,7 @@ const AuthPage = () => {
                   buttonText={"Sign In"}
                   formData={signUpFormData}
                   setFormData={setSignUpFormData}
+                  isButtonDisabled={!checkIfSignUnFormIsValid()}
                 />
               </CardContent>
             </Card>
