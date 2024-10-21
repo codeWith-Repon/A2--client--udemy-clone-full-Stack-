@@ -38,3 +38,14 @@ export const signInFormControls = [
     componentType: "input",
   },
 ];
+
+export const initalSignInFormData = {
+  userEmail: "",
+  password: "",
+};
+
+export const initalSignUpFormData = {
+  userName: "",
+  userEmail: "",
+  password: "",
+};

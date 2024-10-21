@@ -8,12 +8,19 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { signInFormControls, signUpFormControls } from "@/config";
+import { AuthContext } from "@/context/auth-context";
 import { GraduationCap } from "lucide-react";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
 const AuthPage = () => {
   const [activeTab, setActiveTab] = useState("signin");
+  const {
+    signInFormData,
+    setSignInFormData,
+    signUpFormData,
+    setSignUpFormData,
+  } = useContext(AuthContext);
 
   function handleTabChange(value) {
     setActiveTab(value);
@@ -49,12 +56,14 @@ const AuthPage = () => {
                 <CommonForm
                   formControls={signInFormControls}
                   buttonText={"Sign In"}
+                  formData={signInFormData}
+                  setFormData={setSignInFormData}
                 />
               </CardContent>
             </Card>
           </TabsContent>
           <TabsContent value="signup">
-          <Card className="p-6 space-y-4">
+            <Card className="p-6 space-y-4">
               <CardHeader>
                 <CardTitle> Create a new account</CardTitle>
                 <CardDescription>
@@ -65,6 +74,8 @@ const AuthPage = () => {
                 <CommonForm
                   formControls={signUpFormControls}
                   buttonText={"Sign In"}
+                  formData={signUpFormData}
+                  setFormData={setSignUpFormData}
                 />
               </CardContent>
             </Card>
