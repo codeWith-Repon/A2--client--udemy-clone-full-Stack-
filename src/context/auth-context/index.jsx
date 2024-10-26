@@ -58,7 +58,7 @@ export default function AuthProvider({ children }) {
       }
     } catch (error) {
       console.log(error);
-      if(!error?.response?.data?.success){
+      if (!error?.response?.data?.success) {
         setAuth({
           authenticate: false,
           user: null,
