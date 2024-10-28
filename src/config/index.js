@@ -50,7 +50,6 @@ export const initalSignUpFormData = {
   password: "",
 };
 
-
 export const languageOptions = [
   { id: "english", label: "English" },
   { id: "spanish", label: "Spanish" },
@@ -163,3 +162,12 @@ export const courseLandingInitialFormData = {
   welcomeMessage: "",
   image: "",
 };
+
+export const courseCurriculumInitialFormData = [
+  {
+    title: "",
+    videoUrl: "",
+    freePreview: false,
+    public_id: "",
+  },
+];
