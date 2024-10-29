@@ -4,11 +4,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { InstructorContext } from "@/context/instructor-context";
+import { mediaUploadService } from "@/services";
 import React, { useContext } from "react";
 
 const CourseCurriculum = () => {
-  const { courseCurriculumFormData, setCourseCurriculumFormData } =
-    useContext(InstructorContext);
+  const {
+    courseCurriculumFormData,
+    setCourseCurriculumFormData,
+    mediaUploadProgress,
+    setMediaUploadProgress,
+  } = useContext(InstructorContext);
 
   function handleNewLecture() {
     setCourseCurriculumFormData([
@@ -26,21 +31,47 @@ const CourseCurriculum = () => {
       title: event.target.value,
     };
     setCourseCurriculumFormData(copyCourseCurriculumFormData);
-    console.log(copyCourseCurriculumFormData);
   }
 
-  function handleFreePreviewChange(currentValue, currentIndex){
-    console.log(currentValue, "currentvalue")
-    console.log(currentValue, currentIndex)
-    let copyCourseCurriculumFormData = [...courseCurriculumFormData]
+  function handleFreePreviewChange(currentValue, currentIndex) {
+    let copyCourseCurriculumFormData = [...courseCurriculumFormData];
     copyCourseCurriculumFormData[currentIndex] = {
       ...copyCourseCurriculumFormData[currentIndex],
-      freePreview: currentValue
-    }
-    setCourseCurriculumFormData(copyCourseCurriculumFormData)
+      freePreview: currentValue,
+    };
+    setCourseCurriculumFormData(copyCourseCurriculumFormData);
   }
 
-  console.log(courseCurriculumFormData);
+  async function handleSingleLectureUpload(event, currentIndex) {
+    console.log("event", event.target.files);
+    const selectedFile = event.target.files[0];
+
+    if (selectedFile) {
+      const videoFormData = new FormData();
+      videoFormData.append("file", selectedFile);
+      console.log("vidoeformdata", videoFormData);
+      try {
+        setMediaUploadProgress(true);
+        const response = await mediaUploadService(videoFormData);
+        if (response?.success) {
+          let copyCourseCurriculumFormData = [...courseCurriculumFormData];
+          copyCourseCurriculumFormData[currentIndex] = {
+            ...copyCourseCurriculumFormData[currentIndex],
+            videoUrl: response?.data?.url,
+            public_id: response?.data?.public_id,
+          };
+          setCourseCurriculumFormData(copyCourseCurriculumFormData);
+          setMediaUploadProgress(false);
+        }
+
+        console.log(response, "response");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
+  console.log("courseCurriculumFormData", courseCurriculumFormData);
   return (
     <Card>
       <CardHeader>Create Course Curriculum</CardHeader>
@@ -72,7 +103,12 @@ const CourseCurriculum = () => {
                 </div>
               </div>
               <div className="mt-6">
-                <Input type="file" accept="video/*" className="mb-4" />
+                <Input
+                  type="file"
+                  accept="video/*"
+                  onChange={(event) => handleSingleLectureUpload(event, index)}
+                  className="mb-4"
+                />
               </div>
             </div>
           ))}
