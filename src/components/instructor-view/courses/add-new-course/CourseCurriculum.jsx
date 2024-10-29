@@ -10,16 +10,37 @@ const CourseCurriculum = () => {
   const { courseCurriculumFormData, setCourseCurriculumFormData } =
     useContext(InstructorContext);
 
-    function handleNewLecture(){
-      setCourseCurriculumFormData([
-        ...courseCurriculumFormData,
-        {
-          ...courseCurriculumFormData[0]
-        }
-      ])
-    }
+  function handleNewLecture() {
+    setCourseCurriculumFormData([
+      ...courseCurriculumFormData,
+      {
+        ...courseCurriculumFormData[0],
+      },
+    ]);
+  }
 
-    console.log(courseCurriculumFormData)
+  function handleCourseTitleChange(event, currentIndex) {
+    let copyCourseCurriculumFormData = [...courseCurriculumFormData];
+    copyCourseCurriculumFormData[currentIndex] = {
+      ...copyCourseCurriculumFormData[currentIndex],
+      title: event.target.value,
+    };
+    setCourseCurriculumFormData(copyCourseCurriculumFormData);
+    console.log(copyCourseCurriculumFormData);
+  }
+
+  function handleFreePreviewChange(currentValue, currentIndex){
+    console.log(currentValue, "currentvalue")
+    console.log(currentValue, currentIndex)
+    let copyCourseCurriculumFormData = [...courseCurriculumFormData]
+    copyCourseCurriculumFormData[currentIndex] = {
+      ...copyCourseCurriculumFormData[currentIndex],
+      freePreview: currentValue
+    }
+    setCourseCurriculumFormData(copyCourseCurriculumFormData)
+  }
+
+  console.log(courseCurriculumFormData);
   return (
     <Card>
       <CardHeader>Create Course Curriculum</CardHeader>
@@ -34,9 +55,17 @@ const CourseCurriculum = () => {
                   name={`title-${index + 1}`}
                   placeholder="Enter lecture title"
                   className="max-w-96"
+                  onChange={(event) => handleCourseTitleChange(event, index)}
+                  value={courseCurriculumFormData[index]?.title}
                 />
                 <div className="flex items-center space-x-2">
-                  <Switch checked={true} id={`freePreview-${index + 1}`} />
+                  <Switch
+                    onCheckedChange={(value) =>
+                      handleFreePreviewChange(value, index)
+                    }
+                    checked={courseCurriculumFormData[index]?.freePreview}
+                    id={`freePreview-${index + 1}`}
+                  />
                   <Label htmlFor={`freePreview-${index + 1}`}>
                     Free Preview
                   </Label>
