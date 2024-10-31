@@ -25,8 +25,8 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
   const controlsTimeoutRef = useRef(null);
 
   function handleProgress(state) {
-    if(!seeking){
-      setPlayed(state.played)
+    if (!seeking) {
+      setPlayed(state.played);
     }
   }
 
@@ -34,23 +34,27 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
     setPlaying(!playing);
   }
 
-  function handleRewind() {}
+  function handleRewind() {
+    console.log(playerRef, "playerRef");
+    playerRef?.current?.seekTo(playerRef?.current?.getCurrentTime() - 5);
+  }
 
-  function handleForward() {}
+  function handleForward() {
+    playerRef?.current?.seekTo(playerRef?.current?.getCurrentTime() + 5);
+  }
 
   function handleToggleMute() {
     setMuted(!muted);
   }
 
   function handleSeekChange(newValue) {
-    setPlayed(newValue[0])
-    setSeeking(true)
-    console.log("played", played)
+    setPlayed(newValue[0]);
+    setSeeking(true);
   }
 
   function handleSeekMouseUp() {
-    setSeeking(false)
-    playerRef.current.seekTo(played)
+    setSeeking(false);
+    playerRef.current.seekTo(played);
   }
 
   return (
