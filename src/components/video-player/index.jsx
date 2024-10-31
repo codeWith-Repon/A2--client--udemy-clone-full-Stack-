@@ -57,6 +57,10 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
     playerRef.current.seekTo(played);
   }
 
+  function handleVolumeChange(newValue) {
+    setVolume(newValue[0]);
+  }
+
   return (
     <div
       ref={playerContainerRef}
@@ -97,7 +101,7 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
                 variant="ghost"
                 size="icon"
                 onClick={handlePlayAndPause}
-                className="text-white hover:text-primary hover:bg-gray-700"
+                className="text-white hover:text-white hover:bg-gray-700"
               >
                 {playing ? (
                   <Pause className="h-6 w-6" />
@@ -109,7 +113,7 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
                 onClick={handleRewind}
                 variant="ghost"
                 size="icon"
-                className="text-white hover:text-primary hover:bg-gray-700"
+                className="text-white hover:text-white hover:bg-gray-700"
               >
                 <RotateCw className="h-6 w-6" />
               </Button>
@@ -117,7 +121,7 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
                 onClick={handleForward}
                 variant="ghost"
                 size="icon"
-                className="text-white hover:text-primary hover:bg-gray-700"
+                className="text-white hover:text-white hover:bg-gray-700"
               >
                 <RotateCcw className="h-6 w-6" />
               </Button>
@@ -125,7 +129,7 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
                 onClick={handleToggleMute}
                 variant="ghost"
                 size="icon"
-                className="text-white hover:text-primary hover:bg-gray-700"
+                className="text-white hover:text-white hover:bg-gray-700"
               >
                 {muted ? (
                   <VolumeX className="h-6 w-6" />
@@ -133,6 +137,13 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
                   <Volume2 className="h-6 w-6" />
                 )}
               </Button>
+              <Slider
+                value={[volume * 100]}
+                max={100}
+                step={1}
+                onValueChange={(value) => handleVolumeChange([value[0] / 100])}
+                className="w-24"
+              />
             </div>
           </div>
         </div>
