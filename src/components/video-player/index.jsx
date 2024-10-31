@@ -27,18 +27,27 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
   function handleProgress() {}
 
   function handlePlayAndPause() {
-    setPlaying(!playing)
+    setPlaying(!playing);
   }
 
   function handleRewind() {}
 
   function handleForward() {}
 
-  function handleToggleMute() {}
+  function handleToggleMute() {
+    setMuted(!muted);
+  }
 
-  function handleSeekChange() {}
+  function handleSeekChange(newValue) {
+    setPlayed(newValue[0])
+    setSeeking(true)
+    console.log("played", played)
+  }
 
-  function handleSeekMouseUp() {}
+  function handleSeekMouseUp() {
+    setSeeking(false)
+    playerRef.current.seekTo(played)
+  }
 
   return (
     <div
