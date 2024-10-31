@@ -24,7 +24,11 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
   const playerContainerRef = useRef(null);
   const controlsTimeoutRef = useRef(null);
 
-  function handleProgress() {}
+  function handleProgress(state) {
+    if(!seeking){
+      setPlayed(state.played)
+    }
+  }
 
   function handlePlayAndPause() {
     setPlaying(!playing);
