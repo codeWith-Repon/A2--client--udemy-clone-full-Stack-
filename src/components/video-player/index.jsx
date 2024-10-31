@@ -1,4 +1,4 @@
-import { Slider } from "@radix-ui/react-slider";
+import { Slider } from "../ui/slider";
 import React, { useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import { Button } from "../ui/button";
