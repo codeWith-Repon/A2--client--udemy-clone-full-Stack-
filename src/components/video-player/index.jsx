@@ -71,7 +71,7 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
     const date = new Date(seconds * 1000);
     const hh = date.getUTCHours();
     const mm = date.getUTCMinutes();
-    const ss = date.getUTCSeconds();
+    const ss = pad(date.getUTCSeconds());
 
     if (hh) {
       return `${hh}:${pad(mm)}:${ss}`;
@@ -85,6 +85,30 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
     clearTimeout(controlsTimeoutRef.current);
     controlsTimeoutRef.current = setTimeout(() => setShowControls(false), 3000);
   }
+
+  const handleFullScreen = useCallback(() => {
+    if (!isFullScreen) {
+      if (playerContainerRef?.current?.requestFullscreen) {
+        playerContainerRef?.current?.requestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  }, [isFullScreen]);
+
+  useEffect(() => {
+    const handleFullScreenChange = () => {
+      setIsFullScreen(document.fullscreenElement);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullScreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullScreenChange);
+    };
+  }, []);
 
   return (
     <div
@@ -180,7 +204,7 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
               <Button
                 variant="ghost"
                 size="icon"
-                // onClick={handleFullScreen}
+                onClick={handleFullScreen}
                 className="text-white hover:text-white hover:bg-gray-700"
               >
                 {isFullScreen ? (
