@@ -80,7 +80,11 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
     return `${mm}:${ss}`;
   }
 
-  
+  function handleMouseMove() {
+    setShowControls(true);
+    clearTimeout(controlsTimeoutRef.current);
+    controlsTimeoutRef.current = setTimeout(() => setShowControls(false), 3000);
+  }
 
   return (
     <div
@@ -89,6 +93,8 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
         isFullScreen ? "w-screen h-screen" : ""
       }`}
       style={{ width, height }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={() => setShowControls(false)}
     >
       <ReactPlayer
         ref={playerRef}
