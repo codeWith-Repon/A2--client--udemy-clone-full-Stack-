@@ -1,8 +1,10 @@
 import { Slider } from "../ui/slider";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import { Button } from "../ui/button";
 import {
+  Maximize,
+  Minimize,
   Pause,
   Play,
   RotateCcw,
@@ -60,6 +62,25 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
   function handleVolumeChange(newValue) {
     setVolume(newValue[0]);
   }
+
+  function pad(string) {
+    return ("0" + string).slice(-2);
+  }
+
+  function formatTime(seconds) {
+    const date = new Date(seconds * 1000);
+    const hh = date.getUTCHours();
+    const mm = date.getUTCMinutes();
+    const ss = date.getUTCSeconds();
+
+    if (hh) {
+      return `${hh}:${pad(mm)}:${ss}`;
+    }
+
+    return `${mm}:${ss}`;
+  }
+
+  
 
   return (
     <div
@@ -144,6 +165,24 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
                 onValueChange={(value) => handleVolumeChange([value[0] / 100])}
                 className="w-24"
               />
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="text-white">
+                {formatTime(played * (playerRef?.current?.getDuration() || 0))}/
+                {formatTime(playerRef?.current?.getDuration() || 0)}
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                // onClick={handleFullScreen}
+                className="text-white hover:text-white hover:bg-gray-700"
+              >
+                {isFullScreen ? (
+                  <Minimize className="h-6 w-6" />
+                ) : (
+                  <Maximize className="h-6 w-6" />
+                )}
+              </Button>
             </div>
           </div>
         </div>
