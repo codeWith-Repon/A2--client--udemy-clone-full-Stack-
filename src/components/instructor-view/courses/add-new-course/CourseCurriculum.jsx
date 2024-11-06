@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import VideoPlayer from "@/components/video-player";
+import { courseCurriculumInitialFormData } from "@/config";
 import { InstructorContext } from "@/context/instructor-context";
 import { mediaDeleteService, mediaUploadService } from "@/services";
 import React, { useContext } from "react";
@@ -23,7 +24,7 @@ const CourseCurriculum = () => {
     setCourseCurriculumFormData([
       ...courseCurriculumFormData,
       {
-        ...courseCurriculumFormData[0],
+        ...courseCurriculumInitialFormData[0],
       },
     ]);
   }
