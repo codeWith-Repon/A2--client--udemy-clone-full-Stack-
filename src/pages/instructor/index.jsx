@@ -18,6 +18,7 @@ const InstructorDashboardPage = () => {
     const response = await fetchInstructorCourseListService();
 
     console.log(response, "response");
+    if (response?.success) SetInstructorCoursesList(response?.data);
   }
 
   useEffect(() => {
@@ -35,7 +36,7 @@ const InstructorDashboardPage = () => {
       icon: Book,
       label: "Courses",
       value: "courses",
-      component: <InstructorCourses />,
+      component: <InstructorCourses listOfCourses={instructorCoursesList} />,
     },
     {
       icon: LogOut,
