@@ -41,14 +41,20 @@ const InstructorCourses = ({ listOfCourses }) => {
             <TableBody>
               {listOfCourses && listOfCourses.length > 0
                 ? listOfCourses.map((course) => (
-                    <TableRow>
+                    <TableRow key={course.title}>
                       <TableCell className="font-medium">
                         {course.title}
                       </TableCell>
                       <TableCell>{course?.students?.length}</TableCell>
                       <TableCell>{course?.pricing}</TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="sm">
+                        <Button
+                          onClick={() => {
+                            navigate(`/instructor/edit-course/${course?._id}`);
+                          }}
+                          variant="ghost"
+                          size="sm"
+                        >
                           <Edit className="h-6 w-6" />
                         </Button>
                         <Button variant="ghost" size="sm">

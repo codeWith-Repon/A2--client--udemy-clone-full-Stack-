@@ -12,7 +12,7 @@ import { AuthContext } from "@/context/auth-context";
 import { InstructorContext } from "@/context/instructor-context";
 import { addNewCourseService } from "@/services";
 import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const AddNewCoursePage = () => {
   const {
@@ -20,9 +20,13 @@ const AddNewCoursePage = () => {
     courseLandingFormData,
     setCourseLandingFormData,
     setCourseCurriculumFormData,
+    currentEditedCourseId,
+    setCurrentEditedCourseId,
   } = useContext(InstructorContext);
   const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
+  const params = useParams()
+  console.log("params", params)
 
   function isEmpty(value) {
     if (Array.isArray(value)) {
@@ -73,7 +77,7 @@ const AddNewCoursePage = () => {
     if (response?.success) {
       setCourseLandingFormData(courseLandingInitialFormData);
       setCourseCurriculumFormData(courseCurriculumInitialFormData);
-      navigate(-1)  //its means back to previous page
+      navigate(-1); //its means back to previous page
     }
 
     console.log(courseFinalFormData, "courseFinalFormData");
