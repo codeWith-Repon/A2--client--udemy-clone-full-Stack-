@@ -66,6 +66,12 @@ const AddNewCoursePage = () => {
       isPublished: true,
     };
 
+    const response = await addNewCourseService(courseFinalFormData);
+
+    if (response?.success) {
+      setCourseLandingFormData(courseLandingInitialFormData);
+      setCourseCurriculumFormData(courseCurriculumInitialFormData);
+    }
 
     console.log(courseFinalFormData, "courseFinalFormData");
   }
