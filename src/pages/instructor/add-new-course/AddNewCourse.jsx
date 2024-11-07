@@ -10,8 +10,11 @@ import {
 } from "@/config";
 import { AuthContext } from "@/context/auth-context";
 import { InstructorContext } from "@/context/instructor-context";
-import { addNewCourseService } from "@/services";
-import React, { useContext } from "react";
+import {
+  addNewCourseService,
+  fetchInstructorCourseDetailsService,
+} from "@/services";
+import React, { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const AddNewCoursePage = () => {
@@ -25,8 +28,8 @@ const AddNewCoursePage = () => {
   } = useContext(InstructorContext);
   const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
-  const params = useParams()
-  console.log("params", params)
+  const params = useParams();
+  console.log("params", params);
 
   function isEmpty(value) {
     if (Array.isArray(value)) {
@@ -82,6 +85,21 @@ const AddNewCoursePage = () => {
 
     console.log(courseFinalFormData, "courseFinalFormData");
   }
+
+  async function fetchCurrentCourseDetails() {
+    const response = await fetchInstructorCourseDetailsService(
+      currentEditedCourseId
+    );
+    console.log("response", response)
+  }
+
+  useEffect(() => {
+    if (currentEditedCourseId !== null) fetchCurrentCourseDetails();
+  }, [currentEditedCourseId]);
+
+  useEffect(() => {
+    if (params) setCurrentEditedCourseId(params?.courseId);
+  }, [params]);
 
   return (
     <div className="container mx-auto p-4">
