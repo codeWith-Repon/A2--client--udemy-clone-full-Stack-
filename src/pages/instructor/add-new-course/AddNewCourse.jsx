@@ -90,7 +90,17 @@ const AddNewCoursePage = () => {
     const response = await fetchInstructorCourseDetailsService(
       currentEditedCourseId
     );
-    console.log("response", response)
+    if (response?.success) {
+      const setCourseFormData = Object.keys(courseLandingInitialFormData).reduce((acc, key) => {
+        acc[key] = response?.data[key] || courseLandingInitialFormData[key]
+        console.log("acc", acc, "key", key)
+        return acc
+      },{})
+      console.log(setCourseFormData,response?.data, "setCourseFormData")
+      setCourseLandingFormData(setCourseFormData)
+      setCourseCurriculumFormData(response?.data?.curriculum)
+
+    }
   }
 
   useEffect(() => {
