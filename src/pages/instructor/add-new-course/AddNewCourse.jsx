@@ -29,7 +29,6 @@ const AddNewCoursePage = () => {
   const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
   const params = useParams();
-  console.log("params", params);
 
   function isEmpty(value) {
     if (Array.isArray(value)) {
@@ -108,8 +107,10 @@ const AddNewCoursePage = () => {
   }, [currentEditedCourseId]);
 
   useEffect(() => {
-    if (params) setCurrentEditedCourseId(params?.courseId);
-  }, [params]);
+    if (params?.courseId) setCurrentEditedCourseId(params?.courseId);
+  }, [params?.courseId]);
+
+  console.log(params, currentEditedCourseId, "params")
 
   return (
     <div className="container mx-auto p-4">
