@@ -13,6 +13,7 @@ import { InstructorContext } from "@/context/instructor-context";
 import {
   addNewCourseService,
   fetchInstructorCourseDetailsService,
+  updateCourseByIdService,
 } from "@/services";
 import React, { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -74,12 +75,19 @@ const AddNewCoursePage = () => {
       isPublished: true,
     };
 
-    const response = await addNewCourseService(courseFinalFormData);
+    const response =
+      currentEditedCourseId !== null
+        ? await updateCourseByIdService(
+            currentEditedCourseId,
+            courseFinalFormData
+          )
+        : await addNewCourseService(courseFinalFormData);
 
     if (response?.success) {
       setCourseLandingFormData(courseLandingInitialFormData);
       setCourseCurriculumFormData(courseCurriculumInitialFormData);
       navigate(-1); //its means back to previous page
+      setCurrentEditedCourseId(null)
     }
 
     console.log(courseFinalFormData, "courseFinalFormData");
@@ -90,15 +98,16 @@ const AddNewCoursePage = () => {
       currentEditedCourseId
     );
     if (response?.success) {
-      const setCourseFormData = Object.keys(courseLandingInitialFormData).reduce((acc, key) => {
-        acc[key] = response?.data[key] || courseLandingInitialFormData[key]
-        console.log("acc", acc, "key", key)
-        return acc
-      },{})
-      console.log(setCourseFormData,response?.data, "setCourseFormData")
-      setCourseLandingFormData(setCourseFormData)
-      setCourseCurriculumFormData(response?.data?.curriculum)
-
+      const setCourseFormData = Object.keys(
+        courseLandingInitialFormData
+      ).reduce((acc, key) => {
+        acc[key] = response?.data[key] || courseLandingInitialFormData[key];
+        // console.log("acc", acc, "key", key)
+        return acc;
+      }, {});
+      // console.log(setCourseFormData,response?.data, "setCourseFormData")
+      setCourseLandingFormData(setCourseFormData);
+      setCourseCurriculumFormData(response?.data?.curriculum);
     }
   }
 
@@ -110,7 +119,7 @@ const AddNewCoursePage = () => {
     if (params?.courseId) setCurrentEditedCourseId(params?.courseId);
   }, [params?.courseId]);
 
-  console.log(params, currentEditedCourseId, "params")
+  // console.log(params, currentEditedCourseId, "params")
 
   return (
     <div className="container mx-auto p-4">
