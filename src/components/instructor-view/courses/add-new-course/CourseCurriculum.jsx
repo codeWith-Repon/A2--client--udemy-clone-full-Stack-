@@ -7,7 +7,11 @@ import { Switch } from "@/components/ui/switch";
 import VideoPlayer from "@/components/video-player";
 import { courseCurriculumInitialFormData } from "@/config";
 import { InstructorContext } from "@/context/instructor-context";
-import { mediaDeleteService, mediaUploadService } from "@/services";
+import {
+  mediaBulkUploadService,
+  mediaDeleteService,
+  mediaUploadService,
+} from "@/services";
 import { data } from "autoprefixer";
 import { UploadIcon } from "lucide-react";
 import React, { useContext, useRef } from "react";
@@ -113,12 +117,25 @@ const CourseCurriculum = () => {
     }
   }
 
-  function handleOpenBulkUploadDialog(){
-    bulkUploadInputRef.current.click()
+  function handleOpenBulkUploadDialog() {
+    bulkUploadInputRef.current.click();
   }
 
   async function handleMediaBulkUpload(event) {
-    
+    const selectedFiles = Array.from(event.target.files);
+    const bulkFormData = new FormData();
+
+    selectedFiles.forEach((fileItem) => bulkFormData.append("files", fileItem));
+    try {
+      setMediaUploadProgress(true);
+      const response = await mediaBulkUploadService(
+        bulkFormData,
+        setMediaUploadProgressPercentage
+      );
+      console.log(response, "Bulk")
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   console.log("courseCurriculumFormData", courseCurriculumFormData);
