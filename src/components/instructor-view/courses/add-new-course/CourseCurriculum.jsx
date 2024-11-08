@@ -1,6 +1,6 @@
 import MediaProgressBar from "@/components/media-progress-bar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -8,7 +8,9 @@ import VideoPlayer from "@/components/video-player";
 import { courseCurriculumInitialFormData } from "@/config";
 import { InstructorContext } from "@/context/instructor-context";
 import { mediaDeleteService, mediaUploadService } from "@/services";
-import React, { useContext } from "react";
+import { data } from "autoprefixer";
+import { UploadIcon } from "lucide-react";
+import React, { useContext, useRef } from "react";
 
 const CourseCurriculum = () => {
   const {
@@ -19,6 +21,8 @@ const CourseCurriculum = () => {
     mediaUploadProgressPercentage,
     setMediaUploadProgressPercentage,
   } = useContext(InstructorContext);
+
+  const bulkUploadInputRef = useRef(null);
 
   function handleNewLecture() {
     setCourseCurriculumFormData([
@@ -109,10 +113,41 @@ const CourseCurriculum = () => {
     }
   }
 
+  function handleOpenBulkUploadDialog(){
+    bulkUploadInputRef.current.click()
+  }
+
+  async function handleMediaBulkUpload(event) {
+    
+  }
+
   console.log("courseCurriculumFormData", courseCurriculumFormData);
   return (
     <Card>
-      <CardHeader>Create Course Curriculum</CardHeader>
+      <CardHeader className="flex flex-row justify-between items-center">
+        <CardTitle>Create Course Curriculum</CardTitle>
+        <div>
+          <Input
+            type="file"
+            ref={bulkUploadInputRef}
+            accept="video/*"
+            multiple
+            className="hidden"
+            id="bulk-media-upload"
+            onChange={handleMediaBulkUpload}
+          />
+          <Button
+            as="label"
+            htmlFor="bulk-media-upload"
+            variant="outline"
+            className="cursor-pointer"
+            onClick={handleOpenBulkUploadDialog}
+          >
+            <UploadIcon className="w-4 h-5 mr-2" />
+            Bulk Upload
+          </Button>
+        </div>
+      </CardHeader>
       <CardContent>
         <Button
           disabled={!isCourseCurriculumFormDataValid() || mediaUploadProgress}
