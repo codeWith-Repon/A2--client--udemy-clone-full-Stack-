@@ -121,6 +121,17 @@ const CourseCurriculum = () => {
     bulkUploadInputRef.current.click();
   }
 
+  function areAllCourseCurriculumFormDataObjectsEmpty(arr) {
+    return arr.every((obj) => {
+      return Object.entries(obj).every(([key, value]) => {
+        if (typeof value === "boolean") {
+          return true;
+        }
+        return value === "";
+      });
+    });
+  }
+
   async function handleMediaBulkUpload(event) {
     const selectedFiles = Array.from(event.target.files);
     const bulkFormData = new FormData();
@@ -132,9 +143,33 @@ const CourseCurriculum = () => {
         bulkFormData,
         setMediaUploadProgressPercentage
       );
-      console.log(response, "Bulk")
-    } catch (error) {
-      console.log(error);
+
+      console.log(response, "bulk");
+      if (response?.success) {
+        // let cpyCourseCurriculumFormdata = [...courseCurriculumFormData]
+        //console.log(cpyCourseCurriculumFormdata, "cpyCourseCurriculumFormdata")
+
+        let cpyCourseCurriculumFormdata =
+          areAllCourseCurriculumFormDataObjectsEmpty(courseCurriculumFormData)
+            ? []
+            : [...courseCurriculumFormData];
+
+        cpyCourseCurriculumFormdata = [
+          ...cpyCourseCurriculumFormdata,
+          ...response?.data.map((item, index) => ({
+            videoUrl: item?.url,
+            public_id: item?.public_id,
+            title: `Lecture ${
+              cpyCourseCurriculumFormdata.length + (index + 1)
+            }`,
+            freePreview: false,
+          })),
+        ];
+        setCourseCurriculumFormData(cpyCourseCurriculumFormdata);
+        setMediaUploadProgress(false);
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
 
