@@ -173,6 +173,21 @@ const CourseCurriculum = () => {
     }
   }
 
+  async function handleDeleteLecture(currentIndex) {
+    let cpyCourseCurriculumFormdata = [...courseCurriculumFormData];
+    // console.log(cpyCourseCurriculumFormdata[currentIndex]);
+    const getCurrentSelectedVideoPublicId =
+      cpyCourseCurriculumFormdata[currentIndex].public_id;
+
+    const response = await mediaDeleteService(getCurrentSelectedVideoPublicId);
+    if (response.success) {
+      cpyCourseCurriculumFormdata = cpyCourseCurriculumFormdata.filter(
+        (_, index) => index !== currentIndex
+      );
+      setCourseCurriculumFormData(cpyCourseCurriculumFormdata)
+    }
+  }
+
   console.log("courseCurriculumFormData", courseCurriculumFormData);
   return (
     <Card>
@@ -249,7 +264,12 @@ const CourseCurriculum = () => {
                     <Button onClick={() => handleReplaceVideo(index)}>
                       Replace Video
                     </Button>
-                    <Button className="bg-red-900">Delete Lecture</Button>
+                    <Button
+                      onClick={() => handleDeleteLecture(index)}
+                      className="bg-red-900"
+                    >
+                      Delete Lecture
+                    </Button>
                   </div>
                 ) : (
                   <Input
