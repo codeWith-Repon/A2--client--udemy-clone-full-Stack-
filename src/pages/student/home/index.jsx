@@ -1,12 +1,23 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import banner from "/banner-img.png";
 import { courseCategories } from "@/config";
 import { Button } from "@/components/ui/button";
 import { StudentContext } from "@/context/student-context";
+import { fetchStudentViewCourseListService } from "@/services";
 
 const StudentHomePage = () => {
   const { setstudentCoursesList, setSetstudentCoursesList } =
     useContext(StudentContext);
+
+  async function fetchAllStudentViewCourses() {
+    const response = await fetchStudentViewCourseListService();
+
+    console.log(response)
+  }
+
+  useEffect(() => {
+    fetchAllStudentViewCourses();
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">
