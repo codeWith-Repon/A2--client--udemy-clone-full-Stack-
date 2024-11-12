@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
@@ -9,11 +10,26 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
 import { filterOptions, sortOptions } from "@/config";
+import { StudentContext } from "@/context/student-context";
+import { fetchStudentViewCourseListService } from "@/services";
 import { ArrowUpDownIcon } from "lucide-react";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 const StudentViewCoursesPage = () => {
   const [sort, setSort] = useState("");
+  const { studentViewCoursesList, setStudentViewCoursesList } =
+    useContext(StudentContext);
+
+  async function fetchAllStudentViewCourses() {
+    const response = await fetchStudentViewCourseListService();
+
+    if (response?.success) setStudentViewCoursesList(response?.data);
+  }
+
+  useEffect(() => {
+    fetchAllStudentViewCourses();
+  }, []);
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">All Courses</h1>
@@ -73,6 +89,45 @@ const StudentViewCoursesPage = () => {
               </DropdownMenuContent>
             </DropdownMenu>
             <span className="text-sm text-black font-bold">10 results</span>
+          </div>
+          <div className="space-y-4">
+            {studentViewCoursesList && studentViewCoursesList.length > 0 ? (
+              studentViewCoursesList.map((courseItem) => (
+                <Card key={courseItem?._id} className="cursor-pointer">
+                  <CardContent className="flex gap-4 p-4">
+                    <div className="w-48 h-32 flex-shrink-0">
+                      <img
+                        src={courseItem?.image}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <CardTitle className="text-xl mb-2">
+                        {courseItem?.title}
+                      </CardTitle>
+                      <p className="text-sm text-gray-600 mb-1">
+                        Created By{" "}
+                        <span className="font-bold">
+                          {courseItem?.instructorName}
+                        </span>
+                      </p>
+                      <p className="text-[16px] text-gray-600 mt-3 mb-2">
+                        {`${courseItem?.curriculum?.length} ${
+                          courseItem?.curriculum?.length <= 1
+                            ? "Lecture"
+                            : "Lectures"
+                        } - ${courseItem?.level.toUpperCase()} Level`}
+                      </p>
+                      <p className="font-bold text-lg">
+                        ${courseItem?.pricing}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <h1>No courses found</h1>
+            )}
           </div>
         </main>
       </div>
