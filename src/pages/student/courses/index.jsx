@@ -16,9 +16,33 @@ import { ArrowUpDownIcon } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 
 const StudentViewCoursesPage = () => {
-  const [sort, setSort] = useState("");
+  const [sort, setSort] = useState("price-lowtohigh");
+  const [filters, setFilters] = useState({});
+
   const { studentViewCoursesList, setStudentViewCoursesList } =
     useContext(StudentContext);
+
+  function handleFilterOnChange(getSectionId, getCurrentOption) {
+    let cpyFilters = { ...filters };
+    const indexOfCurrentSection = Object.keys(cpyFilters).indexOf(getSectionId);
+    if (indexOfCurrentSection === -1) {
+      cpyFilters = {
+        ...filters,
+        [getSectionId]: [getCurrentOption.id],
+      };
+    } else {
+      const indexOfCurrentOption = cpyFilters[getSectionId].indexOf(
+        getCurrentOption.id
+      );
+      if (indexOfCurrentOption === -1)
+        cpyFilters[getSectionId].push(getCurrentOption.id);
+      else cpyFilters[getSectionId].splice(indexOfCurrentOption, 1);
+    }
+    setFilters(cpyFilters);
+    sessionStorage.setItem("filters", JSON.stringify(cpyFilters)); // Save filters to sessionStorage
+  }
+
+  console.log(filters);
 
   async function fetchAllStudentViewCourses() {
     const response = await fetchStudentViewCourseListService();
@@ -27,6 +51,11 @@ const StudentViewCoursesPage = () => {
   }
 
   useEffect(() => {
+    const savedFilters = sessionStorage.getItem("filters"); //Retrieve filters from session stroage
+    if (savedFilters) {
+      setFilters(JSON.parse(savedFilters)); // set the filters state with retrieved filters
+    }
+
     fetchAllStudentViewCourses();
   }, []);
 
@@ -46,9 +75,14 @@ const StudentViewCoursesPage = () => {
                       className="flex font-medium items-center gap-3"
                     >
                       <Checkbox
-                        checked={false}
+                        checked={
+                          filters &&
+                          Object.keys(filters).length > 0 &&
+                          filters[keyItem] &&
+                          filters[keyItem].indexOf(option.id) > -1
+                        }
                         onCheckedChange={() =>
-                          handleFilterOnChange(keyItem, option.id)
+                          handleFilterOnChange(keyItem, option)
                         }
                       />
                       {option.label}
