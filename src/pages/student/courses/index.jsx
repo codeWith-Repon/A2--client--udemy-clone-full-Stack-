@@ -58,8 +58,12 @@ const StudentViewCoursesPage = () => {
 
   console.log(filters);
 
-  async function fetchAllStudentViewCourses() {
-    const response = await fetchStudentViewCourseListService();
+  async function fetchAllStudentViewCourses(filters, sort) {
+    const query = new URLSearchParams({
+      ...filters,
+      sortBy: sort,
+    });
+    const response = await fetchStudentViewCourseListService(query);
 
     if (response?.success) setStudentViewCoursesList(response?.data);
   }
@@ -70,13 +74,17 @@ const StudentViewCoursesPage = () => {
   }, [filters]);
 
   useEffect(() => {
-    const savedFilters = sessionStorage.getItem("filters"); //Retrieve filters from session stroage
+    setSort("price-lowtohigh");
+    const savedFilters = sessionStorage.getItem("filters") || {}; //Retrieve filters from session stroage
     if (savedFilters) {
       setFilters(JSON.parse(savedFilters)); // set the filters state with retrieved filters
     }
-
-    fetchAllStudentViewCourses();
   }, []);
+
+  useEffect(() => {
+    if (filters !== null && sort !== null)
+      fetchAllStudentViewCourses(filters, sort);
+  }, [filters, sort]);
 
   return (
     <div className="container mx-auto p-4">
