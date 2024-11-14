@@ -75,9 +75,9 @@ const StudentViewCoursesPage = () => {
 
   useEffect(() => {
     setSort("price-lowtohigh");
-    const savedFilters = sessionStorage.getItem("filters") || {}; //Retrieve filters from session stroage
+    const savedFilters = sessionStorage.getItem("filters") ; //Retrieve filters from session stroage
     if (savedFilters) {
-      setFilters(JSON.parse(savedFilters)); // set the filters state with retrieved filters
+      setFilters(JSON.parse(savedFilters) || {}); // set the filters state with retrieved filters
     }
   }, []);
 
@@ -85,6 +85,12 @@ const StudentViewCoursesPage = () => {
     if (filters !== null && sort !== null)
       fetchAllStudentViewCourses(filters, sort);
   }, [filters, sort]);
+
+  useEffect(()=> {
+    return () => {
+      sessionStorage.removeItem('filters')
+    }
+  }, [])
 
   return (
     <div className="container mx-auto p-4">
@@ -187,7 +193,7 @@ const StudentViewCoursesPage = () => {
                 </Card>
               ))
             ) : (
-              <h1>No courses found</h1>
+              <h1 className="font-bold text-4xl">No courses found</h1>
             )}
           </div>
         </main>
