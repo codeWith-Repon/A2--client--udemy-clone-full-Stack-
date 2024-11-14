@@ -15,7 +15,7 @@ import { StudentContext } from "@/context/student-context";
 import { fetchStudentViewCourseListService } from "@/services";
 import { ArrowUpDownIcon } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 function createSearchParamsHelper(filterParams) {
   const queryParams = [];
@@ -40,6 +40,7 @@ const StudentViewCoursesPage = () => {
     loadingState,
     setLoadingState,
   } = useContext(StudentContext);
+  const navigate = useNavigate();
 
   function handleFilterOnChange(getSectionId, getCurrentOption) {
     let cpyFilters = { ...filters };
@@ -165,12 +166,18 @@ const StudentViewCoursesPage = () => {
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
-            <span className="text-sm text-black font-bold">{studentViewCoursesList.length} Results</span>
+            <span className="text-sm text-black font-bold">
+              {studentViewCoursesList.length} Results
+            </span>
           </div>
           <div className="space-y-4">
             {studentViewCoursesList && studentViewCoursesList.length > 0 ? (
               studentViewCoursesList.map((courseItem) => (
-                <Card key={courseItem?._id} className="cursor-pointer">
+                <Card
+                  onClick={() => navigate(`/course/details/${courseItem._id}`)}
+                  key={courseItem?._id}
+                  className="cursor-pointer"
+                >
                   <CardContent className="flex gap-4 p-4">
                     <div className="w-48 h-32 flex-shrink-0">
                       <img
