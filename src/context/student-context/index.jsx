@@ -5,7 +5,7 @@ export const StudentContext = createContext(null);
 export default function StudentProvider({ children }) {
   const [studentViewCoursesList, setStudentViewCoursesList] = useState([]);
   const [loadingState, setLoadingState] = useState(true);
-  const [StudentViewCourseDetailsPage, setStudentViewCourseDetailsPage] =
+  const [StudentViewCourseDetails, setStudentViewCourseDetails] =
     useState(null);
   const [currentCourseDetailsId, setCurrentCourseDetailsId] = useState(null);
 
@@ -16,8 +16,8 @@ export default function StudentProvider({ children }) {
         setStudentViewCoursesList,
         loadingState,
         setLoadingState,
-        StudentViewCourseDetailsPage,
-        setStudentViewCourseDetailsPage,
+        StudentViewCourseDetails,
+        setStudentViewCourseDetails,
         currentCourseDetailsId,
         setCurrentCourseDetailsId,
       }}
