@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { filterOptions, sortOptions } from "@/config";
 import { StudentContext } from "@/context/student-context";
 import { fetchStudentViewCourseListService } from "@/services";
@@ -33,8 +34,12 @@ const StudentViewCoursesPage = () => {
   const [filters, setFilters] = useState({});
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { studentViewCoursesList, setStudentViewCoursesList } =
-    useContext(StudentContext);
+  const {
+    studentViewCoursesList,
+    setStudentViewCoursesList,
+    loadingState,
+    setLoadingState,
+  } = useContext(StudentContext);
 
   function handleFilterOnChange(getSectionId, getCurrentOption) {
     let cpyFilters = { ...filters };
@@ -65,7 +70,10 @@ const StudentViewCoursesPage = () => {
     });
     const response = await fetchStudentViewCourseListService(query);
 
-    if (response?.success) setStudentViewCoursesList(response?.data);
+    if (response?.success) {
+      setStudentViewCoursesList(response?.data);
+      setLoadingState(false);
+    }
   }
 
   useEffect(() => {
@@ -75,7 +83,7 @@ const StudentViewCoursesPage = () => {
 
   useEffect(() => {
     setSort("price-lowtohigh");
-    const savedFilters = sessionStorage.getItem("filters") ; //Retrieve filters from session stroage
+    const savedFilters = sessionStorage.getItem("filters"); //Retrieve filters from session stroage
     if (savedFilters) {
       setFilters(JSON.parse(savedFilters) || {}); // set the filters state with retrieved filters
     }
@@ -86,11 +94,13 @@ const StudentViewCoursesPage = () => {
       fetchAllStudentViewCourses(filters, sort);
   }, [filters, sort]);
 
-  useEffect(()=> {
+  useEffect(() => {
     return () => {
-      sessionStorage.removeItem('filters')
-    }
-  }, [])
+      sessionStorage.removeItem("filters");
+    };
+  }, []);
+
+  console.log(loadingState, "loadingState");
 
   return (
     <div className="container mx-auto p-4">
@@ -155,7 +165,7 @@ const StudentViewCoursesPage = () => {
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
-            <span className="text-sm text-black font-bold">10 results</span>
+            <span className="text-sm text-black font-bold">{studentViewCoursesList.length} Results</span>
           </div>
           <div className="space-y-4">
             {studentViewCoursesList && studentViewCoursesList.length > 0 ? (
@@ -192,6 +202,8 @@ const StudentViewCoursesPage = () => {
                   </CardContent>
                 </Card>
               ))
+            ) : loadingState ? (
+              <Skeleton />
             ) : (
               <h1 className="font-bold text-4xl">No courses found</h1>
             )}
