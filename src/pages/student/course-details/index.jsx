@@ -5,7 +5,7 @@ import { StudentContext } from "@/context/student-context";
 import { fetchStudentViewCourseDetailsService } from "@/services";
 import { CheckCircle, Globe, Lock, PlayCircle, UserCheck } from "lucide-react";
 import React, { useContext, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 const StudentViewCourseDetailsPage = () => {
   //1st
@@ -19,6 +19,7 @@ const StudentViewCourseDetailsPage = () => {
   } = useContext(StudentContext);
 
   const { id } = useParams();
+  const location = useLocation();
 
   //4th
   async function fetchStudentViewCourseDetails() {
@@ -44,6 +45,11 @@ const StudentViewCourseDetailsPage = () => {
   useEffect(() => {
     if (id) setCurrentCourseDetailsId(id);
   }, [id]);
+
+  useEffect(() => {
+    if (!location.pathname.includes("course/details/"))
+      setStudentViewCourseDetails(null), setCurrentCourseDetailsId(null);
+  }, [location.pathname]);
 
   //6th
   if (loadingState) return <Skeleton />;
