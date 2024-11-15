@@ -1,10 +1,19 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import VideoPlayer from "@/components/video-player";
 import { StudentContext } from "@/context/student-context";
 import { fetchStudentViewCourseDetailsService } from "@/services";
 import { CheckCircle, Globe, Lock, PlayCircle, UserCheck } from "lucide-react";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
 const StudentViewCourseDetailsPage = () => {
@@ -17,6 +26,9 @@ const StudentViewCourseDetailsPage = () => {
     currentCourseDetailsId,
     setCurrentCourseDetailsId,
   } = useContext(StudentContext);
+  const [displayCurrentVideoFreePreview, setDisplayCurrentVideoFreePreview] =
+    useState(null);
+  const [showFreePreviewDialog, setShowFreePreviewDialog] = useState(false);
 
   const { id } = useParams();
   const location = useLocation();
@@ -35,6 +47,16 @@ const StudentViewCourseDetailsPage = () => {
       setLoadingState(false);
     }
   }
+
+  function handleSetFreePreview(getCurrentVideoInfo) {
+    setDisplayCurrentVideoFreePreview(getCurrentVideoInfo?.public_id);
+  }
+
+  useEffect(() => {
+    if (displayCurrentVideoFreePreview !== null) {
+      setShowFreePreviewDialog(true);
+    }
+  }, [displayCurrentVideoFreePreview]);
 
   //3rd
   useEffect(() => {
@@ -109,7 +131,12 @@ const StudentViewCourseDetailsPage = () => {
               </ul>
             </CardContent>
           </Card>
-          {/* problem section */}
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle>Course Description</CardTitle>
+            </CardHeader>
+            <CardContent>{StudentViewCourseDetails?.description}</CardContent>
+          </Card>
           <Card className="mb-8">
             <CardHeader>
               <CardTitle>Course Curriculum</CardTitle>
@@ -124,6 +151,11 @@ const StudentViewCourseDetailsPage = () => {
                         ? "cursor-pointer"
                         : "cursor-not-allowed"
                     } flex items-center mb-4`}
+                    onClick={
+                      curriculumItem?.freePreview
+                        ? () => handleSetFreePreview(curriculumItem)
+                        : null
+                    }
                   >
                     {curriculumItem?.freePreview ? (
                       <PlayCircle className="mr-2 h-4 w-4" />
@@ -153,10 +185,35 @@ const StudentViewCourseDetailsPage = () => {
                   height="200px"
                 />
               </div>
+              <div className="mb-4">
+                <span className="text-3xl font-bold">
+                  ${StudentViewCourseDetails?.pricing}
+                </span>
+              </div>
+              <Button className="w-full">Buy Now</Button>
             </CardContent>
           </Card>
         </aside>
       </div>
+
+      <Dialog
+        open={showFreePreviewDialog}
+        onOpenChange={setShowFreePreviewDialog}
+      >
+        <DialogContent className="sm:max-w-[800px]">
+          <DialogHeader>
+            <DialogTitle>Course Preview</DialogTitle>
+          </DialogHeader>
+
+          <DialogFooter className="sm:justify-start">
+            <DialogClose asChild>
+              <Button type="button" variant="secondary">
+                Close
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
