@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import VideoPlayer from "@/components/video-player";
 import { StudentContext } from "@/context/student-context";
 import { fetchStudentViewCourseDetailsService } from "@/services";
 import { CheckCircle, Globe, Lock, PlayCircle, UserCheck } from "lucide-react";
@@ -46,6 +47,19 @@ const StudentViewCourseDetailsPage = () => {
 
   //6th
   if (loadingState) return <Skeleton />;
+
+  const getIndexOfFreePreviewUrl =
+    StudentViewCourseDetails !== null
+      ? StudentViewCourseDetails?.curriculum?.findIndex(
+          (item) => item.freePreview
+        )
+      : -1;
+
+  console.log(
+    getIndexOfFreePreviewUrl,
+    StudentViewCourseDetails?.curriculum[getIndexOfFreePreviewUrl],
+    "repon"
+  );
 
   return (
     <div className="mx-auto p-4">
@@ -117,6 +131,25 @@ const StudentViewCourseDetailsPage = () => {
             </CardContent>
           </Card>
         </main>
+        <aside className="w-full md:w-[500px]">
+          <Card className="sticky top-4">
+            <CardContent className="p-6">
+              <div className="acpect-video rounded-lg flex items-center justify-center">
+                <VideoPlayer
+                  url={
+                    getIndexOfFreePreviewUrl !== -1
+                      ? StudentViewCourseDetails?.curriculum[
+                          getIndexOfFreePreviewUrl
+                        ].videoUrl
+                      : ""
+                  }
+                  width="450px"
+                  height="200px"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </aside>
       </div>
     </div>
   );
