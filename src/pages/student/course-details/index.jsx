@@ -198,7 +198,10 @@ const StudentViewCourseDetailsPage = () => {
 
       <Dialog
         open={showFreePreviewDialog}
-        onOpenChange={setShowFreePreviewDialog}
+        onOpenChange={() => {
+          setShowFreePreviewDialog(false);
+          setDisplayCurrentVideoFreePreview(null);
+        }}
       >
         <DialogContent className="sm:max-w-[800px]">
           <DialogHeader>
