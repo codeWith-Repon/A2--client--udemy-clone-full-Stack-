@@ -49,7 +49,7 @@ const StudentViewCourseDetailsPage = () => {
   }
 
   function handleSetFreePreview(getCurrentVideoInfo) {
-    setDisplayCurrentVideoFreePreview(getCurrentVideoInfo?.public_id);
+    setDisplayCurrentVideoFreePreview(getCurrentVideoInfo?.videoUrl);
   }
 
   useEffect(() => {
@@ -207,7 +207,26 @@ const StudentViewCourseDetailsPage = () => {
           <DialogHeader>
             <DialogTitle>Course Preview</DialogTitle>
           </DialogHeader>
-
+          <div className="acpect-video rounded-lg flex items-center justify-center">
+            <VideoPlayer
+              url={displayCurrentVideoFreePreview}
+              width="450px"
+              height="200px"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            {StudentViewCourseDetails?.curriculum
+              ?.filter((item) => item.freePreview)
+              .map((filteredItem) => (
+                <p
+                  onClick={() => handleSetFreePreview(filteredItem)}
+                  key={filteredItem.videoUrl}
+                  className="cursor-pointer text-[16px] font-medium"
+                >
+                  {filteredItem?.title}
+                </p>
+              ))}
+          </div>
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
               <Button type="button" variant="secondary">
