@@ -12,7 +12,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import VideoPlayer from "@/components/video-player";
 import { AuthContext } from "@/context/auth-context";
 import { StudentContext } from "@/context/student-context";
-import { createPaymentService, fetchStudentViewCourseDetailsService } from "@/services";
+import {
+  createPaymentService,
+  fetchStudentViewCourseDetailsService,
+} from "@/services";
 import { CheckCircle, Globe, Lock, PlayCircle, UserCheck } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
@@ -75,8 +78,16 @@ const StudentViewCourseDetailsPage = () => {
       coursePricing: StudentViewCourseDetails?.pricing,
     };
 
-    console.log(paymentPayload, "paymentPayload");
-    
+    const response = await createPaymentService(paymentPayload);
+    console.log(response, "response");
+
+    if (response.success) {
+      sessionStorage.setItem(
+        "currentOrderId",
+        JSON.stringify(response?.data?.orderId)
+      );
+      setApprovalUrl(response?.data?.approvalUrl);
+    }
   }
 
   useEffect(() => {
@@ -102,6 +113,10 @@ const StudentViewCourseDetailsPage = () => {
 
   //6th
   if (loadingState) return <Skeleton />;
+
+  if (approvalUrl !== "") {
+    window.location.href = approvalUrl;
+  }
 
   const getIndexOfFreePreviewUrl =
     StudentViewCourseDetails !== null
