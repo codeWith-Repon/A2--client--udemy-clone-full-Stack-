@@ -10,8 +10,9 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import VideoPlayer from "@/components/video-player";
+import { AuthContext } from "@/context/auth-context";
 import { StudentContext } from "@/context/student-context";
-import { fetchStudentViewCourseDetailsService } from "@/services";
+import { createPaymentService, fetchStudentViewCourseDetailsService } from "@/services";
 import { CheckCircle, Globe, Lock, PlayCircle, UserCheck } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
@@ -26,9 +27,12 @@ const StudentViewCourseDetailsPage = () => {
     currentCourseDetailsId,
     setCurrentCourseDetailsId,
   } = useContext(StudentContext);
+  const { auth } = useContext(AuthContext);
+
   const [displayCurrentVideoFreePreview, setDisplayCurrentVideoFreePreview] =
     useState(null);
   const [showFreePreviewDialog, setShowFreePreviewDialog] = useState(false);
+  const [approvalUrl, setApprovalUrl] = useState("");
 
   const { id } = useParams();
   const location = useLocation();
@@ -50,6 +54,29 @@ const StudentViewCourseDetailsPage = () => {
 
   function handleSetFreePreview(getCurrentVideoInfo) {
     setDisplayCurrentVideoFreePreview(getCurrentVideoInfo?.videoUrl);
+  }
+
+  async function handleCreatePayment() {
+    const paymentPayload = {
+      userId: auth?.user?._id,
+      userName: auth?.user?.userName,
+      userEmail: auth?.user?.userEmail,
+      orderStatus: "pending",
+      paymentMethod: "paypal",
+      paymentStatus: "initiated",
+      orderDate: new Date(),
+      paymentId: "",
+      payerId: "",
+      instructorId: StudentViewCourseDetails?.instructorId,
+      instructorName: StudentViewCourseDetails?.instructorName,
+      courseImage: StudentViewCourseDetails?.image,
+      courseTitle: StudentViewCourseDetails?.title,
+      courseId: StudentViewCourseDetails?._id,
+      coursePricing: StudentViewCourseDetails?.pricing,
+    };
+
+    console.log(paymentPayload, "paymentPayload");
+    
   }
 
   useEffect(() => {
@@ -82,12 +109,6 @@ const StudentViewCourseDetailsPage = () => {
           (item) => item.freePreview
         )
       : -1;
-
-  console.log(
-    getIndexOfFreePreviewUrl,
-    StudentViewCourseDetails?.curriculum[getIndexOfFreePreviewUrl],
-    "repon"
-  );
 
   return (
     <div className="mx-auto p-4">
@@ -190,7 +211,9 @@ const StudentViewCourseDetailsPage = () => {
                   ${StudentViewCourseDetails?.pricing}
                 </span>
               </div>
-              <Button className="w-full">Buy Now</Button>
+              <Button onClick={handleCreatePayment} className="w-full">
+                Buy Now
+              </Button>
             </CardContent>
           </Card>
         </aside>
