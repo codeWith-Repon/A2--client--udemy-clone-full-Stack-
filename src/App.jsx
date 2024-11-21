@@ -77,7 +77,7 @@ function App() {
           element={<StudentViewCourseDetailsPage />}
         />
         <Route path="payment-return" element={<PaypalPaymentReturnPage />} />
-        <Route path="payment-return" element={<StudentCoursesPage />} />
+        <Route path="student-courses" element={<StudentCoursesPage />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
