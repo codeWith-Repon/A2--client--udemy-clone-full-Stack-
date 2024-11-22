@@ -43,7 +43,8 @@ const StudentViewCourseDetailsPage = () => {
   //4th
   async function fetchStudentViewCourseDetails() {
     const response = await fetchStudentViewCourseDetailsService(
-      currentCourseDetailsId
+      currentCourseDetailsId, 
+      auth?.user?._id
     );
     //5th
     if (response?.success) {
