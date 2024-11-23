@@ -23,14 +23,19 @@ const StudnetViewCommonHeader = () => {
           </span>
         </Link>
         <div className="flex items-center space-x-1">
-          <Button onClick={() => navigate("/courses")} variant="ghost">
+          <Button onClick={() => {
+            location.pathname.includes("/courses") ? null : navigate("/courses")
+          }} variant="ghost">
             Explore Courses
           </Button>
         </div>
       </div>
       <div className="flex items-center space-x-4">
         <div className="flex gap-4 items-center">
-          <div onClick={()=>navigate('/student-courses')} className="flex cursor-pointer items-center gap-3">
+          <div
+            onClick={() => navigate("/student-courses")}
+            className="flex cursor-pointer items-center gap-3"
+          >
             <span className="font-extrabold md:text-xl text-[14px]">
               My Courses
             </span>
