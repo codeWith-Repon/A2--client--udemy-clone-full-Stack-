@@ -11,8 +11,12 @@ import {
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { filterOptions, sortOptions } from "@/config";
+import { AuthContext } from "@/context/auth-context";
 import { StudentContext } from "@/context/student-context";
-import { fetchStudentViewCourseListService } from "@/services";
+import {
+  checkCoursePurchaseInfoService,
+  fetchStudentViewCourseListService,
+} from "@/services";
 import { ArrowUpDownIcon } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -41,6 +45,7 @@ const StudentViewCoursesPage = () => {
     setLoadingState,
   } = useContext(StudentContext);
   const navigate = useNavigate();
+  const { auth } = useContext(AuthContext);
 
   function handleFilterOnChange(getSectionId, getCurrentOption) {
     let cpyFilters = { ...filters };
@@ -74,6 +79,21 @@ const StudentViewCoursesPage = () => {
     if (response?.success) {
       setStudentViewCoursesList(response?.data);
       setLoadingState(false);
+    }
+  }
+
+  async function handleCourseNavigate(getCurrentCourseId) {
+    const response = await checkCoursePurchaseInfoService(
+      getCurrentCourseId,
+      auth?.user?._id
+    );
+    
+    if(response?.success){
+      if(response?.data){
+        navigate(`/course-progress/${getCurrentCourseId}`)
+      } else {
+        navigate(`/course/details/${getCurrentCourseId}`)
+      }
     }
   }
 
@@ -174,7 +194,7 @@ const StudentViewCoursesPage = () => {
             {studentViewCoursesList && studentViewCoursesList.length > 0 ? (
               studentViewCoursesList.map((courseItem) => (
                 <Card
-                  onClick={() => navigate(`/course/details/${courseItem._id}`)}
+                  onClick={() => handleCourseNavigate(courseItem?._id)}
                   key={courseItem?._id}
                   className="cursor-pointer"
                 >
