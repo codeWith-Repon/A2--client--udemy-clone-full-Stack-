@@ -122,3 +122,10 @@ export async function fetchStudentBoughtCoursesServivce(studentId) {
 
   return data;
 }
+
+export async function getCurrentCourseProgressService(userId, courseId) {
+  const { data } = await axiosInstance.get(
+    `/student/course-progress/get/${userId}/${courseId}`
+  );
+  return data;
+}
