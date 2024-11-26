@@ -1,9 +1,18 @@
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { AuthContext } from "@/context/auth-context";
 import { StudentContext } from "@/context/student-context";
 import { getCurrentCourseProgressService } from "@/services";
 import { ChevronLeft } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
+import Confetti from "react-confetti";
 import { useNavigate, useParams } from "react-router-dom";
 
 const StudentViewCourseProgressPage = () => {
@@ -37,7 +46,7 @@ const StudentViewCourseProgressPage = () => {
           setShowCourseCompleteDialog(true);
           setShowConfetti(true);
 
-          return
+          return;
         }
       }
     }
@@ -49,6 +58,9 @@ const StudentViewCourseProgressPage = () => {
 
   return (
     <div className="flex flex-col h-screen bg-[#1c1d1f] text-white">
+      {
+        showConfetti && <Confetti/>
+      }
       <div className="flex items-center justify-between p-4 bg-[#1c1d1f] border-b border-gray-700">
         <div className="flex items-center space-x-4">
           <Button
@@ -62,6 +74,33 @@ const StudentViewCourseProgressPage = () => {
           </Button>
         </div>
       </div>
+      <Dialog open={lockCourse}>
+        <DialogContent className="sm:w-[425px]">
+          <DialogHeader>
+            <DialogTitle>You can't view this page</DialogTitle>
+            <DialogDescription>
+              Please purchase this course to get access
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={showCourseCompleteDialog}>
+        <DialogContent className="sm:w-[425px]">
+          <DialogHeader>
+            <DialogTitle>
+              Congratulations!
+            </DialogTitle>
+            <DialogDescription className="flex flex-col gap-3">
+              <Label>You have completed the course</Label>
+              <div className="flex flex-row gap-3">
+                <Button>My Course Page</Button>
+                <Button>Rewatch Course</Button>
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+
+      </Dialog>
     </div>
   );
 };
