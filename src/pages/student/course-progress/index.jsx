@@ -56,11 +56,16 @@ const StudentViewCourseProgressPage = () => {
     fetchCurrentCourseProgress();
   }, [id]);
 
+  useEffect(() => {
+    if (showConfetti)
+      setTimeout(() => {
+        setShowConfetti(false);
+      }, 5000);
+  }, [showConfetti]);
+
   return (
     <div className="flex flex-col h-screen bg-[#1c1d1f] text-white">
-      {
-        showConfetti && <Confetti/>
-      }
+      {showConfetti && <Confetti />}
       <div className="flex items-center justify-between p-4 bg-[#1c1d1f] border-b border-gray-700">
         <div className="flex items-center space-x-4">
           <Button
@@ -87,9 +92,7 @@ const StudentViewCourseProgressPage = () => {
       <Dialog open={showCourseCompleteDialog}>
         <DialogContent className="sm:w-[425px]">
           <DialogHeader>
-            <DialogTitle>
-              Congratulations!
-            </DialogTitle>
+            <DialogTitle>Congratulations!</DialogTitle>
             <DialogDescription className="flex flex-col gap-3">
               <Label>You have completed the course</Label>
               <div className="flex flex-row gap-3">
@@ -99,7 +102,6 @@ const StudentViewCourseProgressPage = () => {
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
-
       </Dialog>
     </div>
   );
