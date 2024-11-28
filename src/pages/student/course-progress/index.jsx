@@ -73,7 +73,7 @@ const StudentViewCourseProgressPage = () => {
       }, 5000);
   }, [showConfetti]);
 
-  console.log(currentLecture, "studentCurrentCourseProgress");
+  console.log(currentLecture, "currentLecture");
 
   return (
     <div className="flex flex-col h-screen bg-[#1c1d1f] text-white">
@@ -111,6 +111,8 @@ const StudentViewCourseProgressPage = () => {
             width="100%"
             height="500px"
             url={currentLecture?.videoUrl}
+            onProgressUpdate={setCurrentLecture}
+            progressData={currentLecture}
           />
           <div className="p-6 bg-[#1c1d1f]">
             <h2 className="text-2xl font-bold mb-2">{currentLecture?.title}</h2>

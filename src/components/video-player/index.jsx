@@ -13,7 +13,13 @@ import {
   VolumeX,
 } from "lucide-react";
 
-const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
+const VideoPlayer = ({
+  width = "100%",
+  height = "100%",
+  url,
+  onProgressUpdate,
+  progressData,
+}) => {
   const [playing, setPlaying] = useState(false);
   const [volume, setVolume] = useState(0.5);
   const [muted, setMuted] = useState(false);
@@ -31,6 +37,7 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
       setPlayed(state.played);
     }
   }
+  // console.log(played, "played");
 
   function handlePlayAndPause() {
     setPlaying(!playing);
@@ -109,6 +116,15 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
       document.removeEventListener("fullscreenchange", handleFullScreenChange);
     };
   }, []);
+
+  useEffect(() => {
+    if (played === 1) {
+      onProgressUpdate({
+        ...progressData,
+        progressValue: played,
+      });
+    }
+  }, [played]);
 
   return (
     <div

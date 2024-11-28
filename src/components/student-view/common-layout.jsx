@@ -1,14 +1,19 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-import StudnetViewCommonHeader from './header'
+import React from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import StudnetViewCommonHeader from "./header";
 
 const StudentViewCommonLayout = () => {
+  const location = useLocation();
+
   return (
     <div>
-      <StudnetViewCommonHeader/>
-      <Outlet/>
-    </div>
-  )
-}
+      {!location.pathname.includes("course-progress") ? (
+        <StudnetViewCommonHeader />
+      ) : null}
 
-export default StudentViewCommonLayout
+      <Outlet />
+    </div>
+  );
+};
+
+export default StudentViewCommonLayout;
