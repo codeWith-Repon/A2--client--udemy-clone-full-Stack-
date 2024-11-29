@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VideoPlayer from "@/components/video-player";
 import { AuthContext } from "@/context/auth-context";
 import { StudentContext } from "@/context/student-context";
-import { getCurrentCourseProgressService } from "@/services";
+import { getCurrentCourseProgressService, markLectureAsViewedService } from "@/services";
 import { ChevronLeft, ChevronRight, SidebarOpen } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import Confetti from "react-confetti";
@@ -57,7 +57,17 @@ const StudentViewCourseProgressPage = () => {
           setCurrentLecture(response?.data?.courseDetails?.curriculum[0]);
         } else {
           // TODO
+          console.log("loging here")
         }
+      }
+    }
+  }
+
+  async function updateCourseProgress() {
+    if(currentLecture){
+      const response = await markLectureAsViewedService(auth?.user?._id, studentCurrentCourseProgress?.courseDetails._id, currentLecture?._id)
+      if(response?.success){
+        fetchCurrentCourseProgress()
       }
     }
   }
@@ -65,6 +75,10 @@ const StudentViewCourseProgressPage = () => {
   useEffect(() => {
     fetchCurrentCourseProgress();
   }, [id]);
+
+  useEffect(()=> {
+    if(currentLecture?.progressValue === 1) updateCourseProgress()
+  }, [currentLecture])
 
   useEffect(() => {
     if (showConfetti)
