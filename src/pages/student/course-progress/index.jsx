@@ -12,7 +12,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VideoPlayer from "@/components/video-player";
 import { AuthContext } from "@/context/auth-context";
 import { StudentContext } from "@/context/student-context";
-import { getCurrentCourseProgressService, markLectureAsViewedService } from "@/services";
+import {
+  getCurrentCourseProgressService,
+  markLectureAsViewedService,
+} from "@/services";
 import { ChevronLeft, ChevronRight, SidebarOpen } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import Confetti from "react-confetti";
@@ -28,7 +31,7 @@ const StudentViewCourseProgressPage = () => {
   const [showCourseCompleteDialog, setShowCourseCompleteDialog] =
     useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
-  const [isSideBarOpen, setIsSideBarOpen] = useState(false);
+  const [isSideBarOpen, setIsSideBarOpen] = useState(true);
 
   const { id } = useParams();
 
@@ -57,17 +60,33 @@ const StudentViewCourseProgressPage = () => {
           setCurrentLecture(response?.data?.courseDetails?.curriculum[0]);
         } else {
           // TODO
-          console.log("loging here")
+          console.log("loging here");
+          const lastIndexOfViewedAsTrue = response?.data?.progress.reduceRight(
+            (acc, obj, index) => {
+              console.log(acc, "acc", obj, "obj", index, "index");
+              return acc === -1 && obj.viewed ? index : acc;
+            },
+            -1
+          );
+          setCurrentLecture(
+            response?.data?.courseDetails?.curriculum[
+              lastIndexOfViewedAsTrue + 1
+            ]
+          );
         }
       }
     }
   }
 
   async function updateCourseProgress() {
-    if(currentLecture){
-      const response = await markLectureAsViewedService(auth?.user?._id, studentCurrentCourseProgress?.courseDetails._id, currentLecture?._id)
-      if(response?.success){
-        fetchCurrentCourseProgress()
+    if (currentLecture) {
+      const response = await markLectureAsViewedService(
+        auth?.user?._id,
+        studentCurrentCourseProgress?.courseDetails._id,
+        currentLecture?._id
+      );
+      if (response?.success) {
+        fetchCurrentCourseProgress();
       }
     }
   }
@@ -76,9 +95,9 @@ const StudentViewCourseProgressPage = () => {
     fetchCurrentCourseProgress();
   }, [id]);
 
-  useEffect(()=> {
-    if(currentLecture?.progressValue === 1) updateCourseProgress()
-  }, [currentLecture])
+  useEffect(() => {
+    if (currentLecture?.progressValue === 1) updateCourseProgress();
+  }, [currentLecture]);
 
   useEffect(() => {
     if (showConfetti)
