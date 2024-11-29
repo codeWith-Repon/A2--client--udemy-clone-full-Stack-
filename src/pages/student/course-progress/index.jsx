@@ -16,7 +16,7 @@ import {
   getCurrentCourseProgressService,
   markLectureAsViewedService,
 } from "@/services";
-import { ChevronLeft, ChevronRight, SidebarOpen } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Play, SidebarOpen } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import Confetti from "react-confetti";
 import { useNavigate, useParams } from "react-router-dom";
@@ -34,6 +34,7 @@ const StudentViewCourseProgressPage = () => {
   const [isSideBarOpen, setIsSideBarOpen] = useState(true);
 
   const { id } = useParams();
+  console.log(studentCurrentCourseProgress, "studentDetails")
 
   async function fetchCurrentCourseProgress() {
     const response = await getCurrentCourseProgressService(auth?.user?._id, id);
@@ -180,6 +181,9 @@ const StudentViewCourseProgressPage = () => {
                         className="flex items-center space-x-2 text-sm text-white font-bold cursor-pointer"
                         key={item._id}
                       >
+                      {
+                        studentCurrentCourseProgress?.progress?.find(progressItem=> progressItem.lectureId == item._id)?.viewed ? <Check className="h-4 w-4 text-green-500" /> : <Play className="h-4 w-4" />
+                      }
                         <span>{item?.title}</span>
                       </div>
                     )
