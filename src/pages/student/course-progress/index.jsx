@@ -17,7 +17,13 @@ import {
   markLectureAsViewedService,
   resetCourseProgressService,
 } from "@/services";
-import { Check, ChevronLeft, ChevronRight, Play, SidebarOpen } from "lucide-react";
+import {
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Play,
+  SidebarOpen,
+} from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import Confetti from "react-confetti";
 import { useNavigate, useParams } from "react-router-dom";
@@ -35,7 +41,7 @@ const StudentViewCourseProgressPage = () => {
   const [isSideBarOpen, setIsSideBarOpen] = useState(true);
 
   const { id } = useParams();
-  console.log(studentCurrentCourseProgress, "studentDetails")
+  console.log(studentCurrentCourseProgress, "studentDetails");
 
   async function fetchCurrentCourseProgress() {
     const response = await getCurrentCourseProgressService(auth?.user?._id, id);
@@ -94,13 +100,16 @@ const StudentViewCourseProgressPage = () => {
   }
 
   async function handleRewatchCourse() {
-    const response = await resetCourseProgressService(auth?.user._id, studentCurrentCourseProgress?.courseDetails._id)
+    const response = await resetCourseProgressService(
+      auth?.user._id,
+      studentCurrentCourseProgress?.courseDetails._id
+    );
 
-    if(response?.success){
+    if (response?.success) {
       setCurrentLecture(null);
       setShowConfetti(false);
-      setShowCourseCompleteDialog(false)      
-      fetchCurrentCourseProgress()
+      setShowCourseCompleteDialog(false);
+      fetchCurrentCourseProgress();
     }
   }
 
@@ -116,7 +125,7 @@ const StudentViewCourseProgressPage = () => {
     if (showConfetti)
       setTimeout(() => {
         setShowConfetti(false);
-      }, 5000);
+      }, 15000);
   }, [showConfetti]);
 
   console.log(currentLecture, "currentLecture");
@@ -193,9 +202,13 @@ const StudentViewCourseProgressPage = () => {
                         className="flex items-center space-x-2 text-sm text-white font-bold cursor-pointer"
                         key={item._id}
                       >
-                      {
-                        studentCurrentCourseProgress?.progress?.find(progressItem=> progressItem.lectureId == item._id)?.viewed ? <Check className="h-4 w-4 text-green-500" /> : <Play className="h-4 w-4" />
-                      }
+                        {studentCurrentCourseProgress?.progress?.find(
+                          (progressItem) => progressItem.lectureId == item._id
+                        )?.viewed ? (
+                          <Check className="h-4 w-4 text-green-500" />
+                        ) : (
+                          <Play className="h-4 w-4" />
+                        )}
                         <span>{item?.title}</span>
                       </div>
                     )
@@ -218,7 +231,7 @@ const StudentViewCourseProgressPage = () => {
       </div>
 
       <Dialog open={lockCourse}>
-        <DialogContent className="sm:w-[425px]">
+        <DialogContent showOverlay={false} className="sm:w-[425px]">
           <DialogHeader>
             <DialogTitle>You can't view this page</DialogTitle>
             <DialogDescription>
@@ -234,7 +247,9 @@ const StudentViewCourseProgressPage = () => {
             <DialogDescription className="flex flex-col gap-3">
               <Label>You have completed the course</Label>
               <div className="flex flex-row gap-3">
-                <Button onClick={()=> navigate('/student-courses')}>My Course Page</Button>
+                <Button onClick={() => navigate("/student-courses")}>
+                  My Course Page
+                </Button>
                 <Button onClick={handleRewatchCourse}>Rewatch Course</Button>
               </div>
             </DialogDescription>
