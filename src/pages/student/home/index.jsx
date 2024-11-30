@@ -16,6 +16,16 @@ const StudentHomePage = () => {
   const {auth} = useContext(AuthContext)
   const navigate = useNavigate()
 
+  function handleNavigateToCoursesPage(getCurrentId){
+    sessionStorage.removeItem("filters");
+    const currentFilter = {
+      category: [getCurrentId]
+    }
+    sessionStorage.setItem("filters", JSON.stringify(currentFilter))
+
+    navigate("/courses")
+  }
+
   async function fetchAllStudentViewCourses() {
     const response = await fetchStudentViewCourseListService();
 
@@ -70,6 +80,7 @@ const StudentHomePage = () => {
               className="justify-start"
               variant="outline"
               key={category.id}
+              onClick={()=> handleNavigateToCoursesPage(category.id)}
             >
               {category.label}
             </Button>
